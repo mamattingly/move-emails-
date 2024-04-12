@@ -20,11 +20,8 @@ Sub MoveEmailsByDateRange()
     
     Set olItems = olSourceFolder.Items.Restrict("[ReceivedTime] >= '" & Format(dtStartDate, "mm/dd/yyyy") & "' AND [ReceivedTime] <= '" & Format(dtEndDate, "mm/dd/yyyy") & "'")
     
-     For Each olItem In olItems
+    For Each olItem In olItems
         olItem.Move olDestFolder
-        Do Until olItem Is Nothing Or olItem.Parent = olDestFolder
-            DoEvents
-        Loop
     Next olItem
     
     Set olItem = Nothing
