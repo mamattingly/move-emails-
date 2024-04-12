@@ -1,0 +1,36 @@
+Sub MoveEmailsByDateRange()
+    Dim olApp As Outlook.Application
+    Dim olNamespace As Outlook.Namespace
+    Dim olSourceFolder As Outlook.Folder
+    Dim olDestFolder As Outlook.Folder
+    Dim olItems As Outlook.Items
+    Dim olItem As Outlook.MailItem
+    Dim dtStartDate As Date
+    Dim dtEndDate As Date
+    
+    Set olApp = New Outlook.Application
+    Set olNamespace = olApp.GetNamespace("MAPI")
+    
+    Set olSourceFolder = olNamespace.PickFolder
+    
+    Set olDestFolder = olNamespace.PickFolder
+    
+    dtStartDate = InputBox("Enter start date (mm/dd/yyyy):")
+    dtEndDate = InputBox("Enter end date (mm/dd/yyyy):")
+    
+    Set olItems = olSourceFolder.Items.Restrict("[ReceivedTime] >= '" & Format(dtStartDate, "mm/dd/yyyy") & "' AND [ReceivedTime] <= '" & Format(dtEndDate, "mm/dd/yyyy") & "'")
+    
+     For Each olItem In olItems
+        olItem.Move olDestFolder
+        Do Until olItem Is Nothing Or olItem.Parent = olDestFolder
+            DoEvents
+        Loop
+    Next olItem
+    
+    Set olItem = Nothing
+    Set olItems = Nothing
+    Set olDestFolder = Nothing
+    Set olSourceFolder = Nothing
+    Set olNamespace = Nothing
+    Set olApp = Nothing
+End Sub
